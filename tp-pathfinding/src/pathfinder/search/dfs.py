@@ -18,10 +18,53 @@ class DepthFirstSearch:
         # Initialize a node with the initial position
         node = Node("", grid.start, 0)
 
-        # Initialize the explored dictionary to be empty
-        explored = {} 
+        # Verifica si el nodo es un estado-objetivo
+        # y en caso afirmativo devuelve la solución.
+        if node.state == grid.end:
+            return Solution(node, expandidos)
         
-        # Add the node to the explored dictionary
-        explored[node.state] = True
-        
-        return NoSolution(explored)
+        # Inicializa la frontera como una pila
+        frontier = StackFrontier()
+        # Agrega el nodo a la frontera
+        frontier.add(node)
+
+        # Inicializa el diccionario expandidos 
+        # como un diccionario vacío
+        expandidos = {} 
+                
+        while True:
+
+            # Falla si la frontera está vacía
+            if frontier.is_empty():
+                return NoSolution(expandidos)
+            
+            # Quita un nodo de la pila frontera
+            node = frontier.remove()
+
+            # Evalúa si el estado del nodo 
+            # está an expandidos
+            if node.state in expandidos:
+                pass
+
+            # Agrega el estado del nodo a expandidos
+            expandidos[node.state] = True
+
+            # Alamacena las posibles acciones en el
+            # diccionario vecinos
+            vecinos = grid.get_neighbours(node.state)
+
+            # Evalúa las acciones guardadas en vecinos
+            for accion in vecinos:
+                n_estado = vecinos[accion]
+                # Verifica que el nuevo estado no 
+                # esté en expandidos
+                if n_estado not in expandidos:
+                    n_nodo = Node('', n_estado,
+                                  node.cost + grid.get_cost(n_estado),
+                                  parent=node, action=accion)
+                    
+                    # Verifica que sea un nodo objetivo
+                    if n_nodo.state == grid.end:
+                        return Solution(n_nodo, expandidos)
+                    # Agrega el nodo a la frontera
+                    frontier.add(n_nodo)            
