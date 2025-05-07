@@ -36,6 +36,7 @@ class AStarSearch:
         # Agrega el estado y el costo a alcanzados
         alcanzados[node.state] = node.cost
 
+        # Mientras la frontera no esté vacía:
         while frontera:
 
             # Quita al nodo de menor costo de la frontera
@@ -61,5 +62,5 @@ class AStarSearch:
                     alcanzados[nuevo_estado] = nuevo_costo
                     frontera.add(nuevo_nodo, nodo.cost + heuristica(nuevo_nodo)) 
         
-        # Devuelve 'NoSolution' porque frontera está vacío
+        # Devuelve 'NoSolution' porque frontera está vacía
         return NoSolution(alcanzados)
