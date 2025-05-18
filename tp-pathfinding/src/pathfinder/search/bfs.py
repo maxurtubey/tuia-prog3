@@ -33,7 +33,7 @@ class BreadthFirstSearch:
         alcanzados = {} 
         # Agrega el nodo al diccionario
         alcanzados[node.state] = True
-
+        
         while not frontier.is_empty():
             
             # Quita un nodo de la frontera
