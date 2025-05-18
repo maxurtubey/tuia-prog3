@@ -34,11 +34,7 @@ class BreadthFirstSearch:
         # Agrega el nodo al diccionario
         alcanzados[node.state] = True
 
-        while True:
-
-            # Falla si la frontera está vacía
-            if frontier.is_empty():
-                return NoSolution(alcanzados)
+        while not frontier.is_empty():
             
             # Quita un nodo de la frontera
             node = frontier.remove()
@@ -66,3 +62,5 @@ class BreadthFirstSearch:
 
                     # Agrega el nodo a la frontera
                     frontier.add(n_nodo)
+        
+        return NoSolution(alcanzados)
