@@ -34,11 +34,7 @@ class GreedyBestFirstSearch:
         # Agrega el estado y el costo a alcanzados
         alcanzados[node.state] = node.cost
 
-        while True:
-
-            # Falla si la frontera está vacía
-            if frontera.is_empty():
-                return NoSolution(alcanzados)
+        while not frontera.is_empty():
             
             # Quita al nodo de menor costo de la frontera
             nodo = frontera.pop()
@@ -62,4 +58,5 @@ class GreedyBestFirstSearch:
                     nuevo_nodo = Node('', nuevo_estado, nuevo_costo, nodo, accion)
                     alcanzados[nuevo_estado] = nuevo_costo
                     frontera.add(nuevo_nodo, heuristica(nuevo_nodo))
-        # return NoSolution(explored)
+
+        return NoSolution(alcanzados)
