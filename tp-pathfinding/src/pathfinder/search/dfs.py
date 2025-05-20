@@ -44,7 +44,7 @@ class DepthFirstSearch:
             # Evalúa si el estado del nodo 
             # está an expandidos
             if node.state in expandidos:
-                pass
+                continue
 
             # Agrega el estado del nodo a expandidos
             expandidos[node.state] = True
