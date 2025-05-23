@@ -82,10 +82,114 @@ class HillClimbing(LocalSearch):
 class HillClimbingReset(LocalSearch):
     """Algoritmo de ascension de colinas con reinicio aleatorio."""
 
-    # COMPLETAR
+    def solve(self, problem: OptProblem):
+        """Resuelve un problema de optimizacion con ascension de colinas con reinicio aleatorio.
+
+        Argumentos:
+        ==========
+        problem: OptProblem
+            un problema de optimizacion
+        """
+        # Iniciamos el reloj
+        start = time()
+
+        # Definimos variables para guardar la mejor solución
+        best_state = None
+        best_value = float("-inf")
+
+        # Contabilizamos los reinicios
+        reinicios = 0
+        
+        while reinicios < 10:
+
+            # Reiniciamos aleatoriamente el problema
+            actual = problem.random_reset()
+            value = problem.obj_val(actual)
+            
+            # Para cada reinicio aplicamos HillClimbing
+            while True:
+
+                # Buscamos la acción que genera el sucesor con mayor valor objetivo
+                act, succ_val = problem.max_action(actual)
+
+                # Si estamos en un máximo local interrumpimos la ejecución del bucle while
+                if succ_val <= value:
+                    break
+
+                # Sino, nos movemos al sucesor
+                actual = problem.result(actual, act) #(devuelve el estado resultante de aplicar la acción act al estado actual)
+                value = succ_val #(actualiza la variable value)
+                self.niters += 1
+
+            # Verificamos si la solución obtenida es mejor que la guardada
+            if value > best_value:
+                best_value = value
+                best_state = actual
+
+            reinicios += 1
+
+        end = time()
+        self.tour = best_state
+        self.value = best_value
+        self.time =  end - start
 
 
 class Tabu(LocalSearch):
     """Algoritmo de busqueda tabu."""
 
-    # COMPLETAR
+    def solve(self, problem: OptProblem):
+        """Resuelve un problema de optimizacion con ascension de colinas usando lista tabu.
+        Criterio de parada: cantidad de iteraciones
+        La lista tabu almacena acciones
+
+        Argumentos:
+        ==========
+        problem: OptProblem
+            un problema de optimizacion
+        """
+        # Inicio del reloj
+        start = time()
+
+        # Arrancamos del estado inicial
+        actual = problem.init
+        value = problem.obj_val(problem.init)
+
+        # Definimos variables para guardar la mejor solución
+        best_state = actual
+        best_value = value
+
+
+        # Inicializamos la lista tabú, guardará acciones con enfoque de capacidad limitada
+        tabu = deque()
+
+        # Inicializamos contador (para criterio de parada por cantidad de iteraciones)
+        iter = 1
+
+        while iter < 1000:
+
+            # Buscamos la acción que genera el sucesor con mayor valor objetivo, teniendo en cuenta la lista tabú con criterio de aspiración
+            act, succ_val = problem.max_action(actual, tabu, best_value)
+
+            # Verificamos si el valor de la función objetivo en el sucesor es mejor que el guardado en best_value
+            if best_value < succ_val:
+                best_state = problem.result(actual, act)
+                best_value = succ_val
+
+            # Actualizamos la lista tabu, teniendo en cuenta la limitación de capacidad
+            if len(tabu) > 12:
+                tabu.popleft()
+                tabu.append(act)
+            else:
+                tabu.append(act)
+
+            # Nos movemos al sucesor
+            actual = problem.result(actual, act)
+            value = problem.obj_val(actual)
+            self.niters += 1
+
+            iter += 1
+
+        end = time()
+        self.tour = best_state
+        self.value = best_value
+        self.time =  end - start
