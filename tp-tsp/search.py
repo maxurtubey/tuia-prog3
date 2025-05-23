@@ -18,6 +18,7 @@ No viene implementado, se debe completar.
 from __future__ import annotations
 from time import time
 from problem import OptProblem
+from collections import deque
 
 
 class LocalSearch:
@@ -93,9 +94,12 @@ class HillClimbingReset(LocalSearch):
         # Iniciamos el reloj
         start = time()
 
+        # Definimos las variables con los valores del estado inicial.
+        best_state = problem.init
+        best_value = problem.obj_val(problem.init)
         # Definimos variables para guardar la mejor solución
-        best_state = None
-        best_value = float("-inf")
+        # best_state = None
+        # best_value = float("-inf")
 
         # Contabilizamos los reinicios
         reinicios = 0
